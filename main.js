@@ -1,6 +1,8 @@
 'use strict';
 
 const electron = require('electron');
+// Load global settings for window
+const globalSettings = require('./game.json')
 // Module to control application life.
 const app = electron.app;
 // Module to create native browser window.
@@ -13,17 +15,28 @@ let mainWindow;
 function createWindow() {
   // Create the browser window, fullscreen
   mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
-    fullscreen: false,
-    frame: false
+    title: globalSettings.name,
+    width: globalSettings.width,
+    height: globalSettings.height,
+    fullscreen: globalSettings.fullscreen,
+    frame: true,
+    center: true,
+    webPreferences: {
+      defaultFontFamily: "sansSerif"
+    }
   });
+
+
 
   // and load the index.html of the app.
   mainWindow.loadURL('file://' + __dirname + '/index.html');
 
   // remove default menu
   mainWindow.setMenu(null);
+
+  mainWindow.on('app-command', function (e, cmd) {
+    console.log(cmd);
+  });
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
